@@ -18,6 +18,8 @@ pl.v.retrieveAndListPersons = {
             row = table.insertRow(-1); // -1 adds row at the end of the table
             row.insertCell(-1).innerHTML = Person.instances[key].personId + "";
             row.insertCell(-1).innerHTML = Person.instances[key].name;
+            row.insertCell(-1).innerHTML = "";
+            row.insertCell(-1).innerHTML = "";
         }
     }
 };

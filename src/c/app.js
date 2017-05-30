@@ -1,15 +1,7 @@
 /**
- * Created by Levin-Can on 06.05.2017.
- * Script for global create and delete operations
+ * Created by Ole on 30.05.2017.
  */
 "use strict";
-/*
- var pl = {
- m: {},
- v: { addCountry:{}, deleteCountry: {}, retrieveAndListCountries: {},
- updateCountry: {}, internationalOrganisations: {}},
- c: { initialize: {}}
- };*/
 
 pl.c.app = {
   createTestData: function () {

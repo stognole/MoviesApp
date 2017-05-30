@@ -22,7 +22,7 @@ class Person {
             this.name = "n.a."; // [1], NonEmptyString
         } else {
             // if arguments were passed, set properties accordingly
-            //try {
+            this.personId = slots.personId;
             this.name = slots._name ? slots._name : slots.name;
         }
     }
@@ -88,6 +88,7 @@ class Person {
     static convertRecToSlots( personRec ) {
         let personSlots = {};
 
+        personSlots.personId = personRec.personId;
         personSlots.name = personRec._name ? personRec._name : personRec.name;
 
         return personSlots;
@@ -177,28 +178,6 @@ class Person {
     convertObjToRec() {
         let personRow = util.cloneObject( this ), keys, i;
         console.log( "test" );
-        // create capital city Id reference
-        personRow.capitalRef = this.capital.name;
-
-        if (this.religions) {
-            personRow.religions = (this.religions).slice();
-        }
-
-        if (this.cities) {
-            personRow.cityRefs = [];
-            keys = Object.keys( this.cities );
-
-            for (i = 0; i < keys.length; i += 1) {
-                personRow.cityRefs.push( keys[i] );
-            }
-        }
-
-        delete personRow.capital;
-        delete personRow._capital;
-        delete personRow.cities;
-        delete personRow._cities;
-        delete personRow._memberOf; // is a derived property and should not be
-        // stored here. It will be restored when the IntOrgs are restored.
 
         return personRow;
     }
@@ -280,7 +259,7 @@ class Person {
     }
 
     set name( newName ) {
-        const validationResult = Person.checkNameAsId( newName );
+        const validationResult = Person.checkName( newName );
 
         if (validationResult instanceof NoConstraintViolation) {
             this._name = newName; // only valid values should enter the database

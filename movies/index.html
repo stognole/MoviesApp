@@ -1,10 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <title>Simple Country Database</title>
+    <script src="/lib/browserShims.js"></script>
+    <script src="/lib/util.js"></script>
+    <script src="/lib/errorTypes.js"></script>
+    <script src="/lib/Enumeration.js"></script>
+    <script src="/src/c/initialize.js"></script>
+    <script src="/src/m/Movie.js"></script>
+    <script src="/src/m/Person.js"></script>
+    <script src="/src/c/app.js"></script>
+    <script type="text/javascript">
+        window.addEventListener( "load",
+            pl.c.app.retrieveAllData );
+        window.addEventListener( "beforeunload",
+            pl.c.app.saveAllData );
+    </script>
 </head>
 <body>
+<h3>Simply Country Data Management App</h3>
+<p>This simple web app for managing country information was developed using the
+    <a href="http://web-engineering.info/tech/JsFrontendApp/minimal-tutorial.html">
+        Minimal App Tutorial</a>
+    by Prof. Gerd Wagner.</p>
+
+<div>
+    <h4>Movie data management</h4>
+    <p><em>Please choose an action:</em></p>
+    <button type="button" onclick="window.location.href='listMovies.html';">
+        List all movies
+    </button>
+    <button type="button" onclick="window.location.href='addMovie.html';">
+        Add a movie
+    </button>
+    <br/>
+    <button type="button" onclick="window.location.href='updateMovie.html';">
+        Update a movie
+    </button>
+    <button type="button" onclick="window.location.href='deleteMovie.html';">
+        Delete a movie's data
+    </button>
+</div>
+<footer><a href="../index.html">Back to start</a></footer>
 
 </body>
 </html>

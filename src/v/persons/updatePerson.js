@@ -87,11 +87,10 @@ pl.v.updatePerson = {
         // values are still tested in the update method,
         // so validity is still granted.
         if (userConfirmed) {
-            console.log( "test" );
             Person.instances[slots.personId].update( slots );
             formObj.reset();
         } else {
-            console.log( "failed" );
+            console.log( "Update failed" );
         }
 
     }

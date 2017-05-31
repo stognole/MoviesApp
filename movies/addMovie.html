@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Add a movie</title>
-    <script src="/lib/browserShims.js"></script>
-    <script src="/lib/util.js"></script>
-    <script src="/lib/errorTypes.js"></script>
-    <script src="/lib/Enumeration.js"></script>
-    <script src="/src/c/initialize.js"></script>
-    <script src="/src/m/Movie.js"></script>
-    <script src="/src/m/Person.js"></script>
-    <script src="/src/c/app.js"></script>
-    <script src="/src/v/movies/addMovie.js"></script>
+    <script src="../lib/browserShims.js"></script>
+    <script src="../lib/util.js"></script>
+    <script src="../lib/errorTypes.js"></script>
+    <script src="../lib/Enumeration.js"></script>
+    <script src="../src/c/initialize.js"></script>
+    <script src="../src/m/Movie.js"></script>
+    <script src="../src/m/Person.js"></script>
+    <script src="../src/c/app.js"></script>
+    <script src="../src/v/movies/addMovie.js"></script>
     <script type="text/javascript">
         window.addEventListener( "load", pl.v.addMovie.setupUserInterface );
     </script>
@@ -20,6 +20,7 @@
 
 <div>
     <form id="movieInput">
+        <label>Movie ID: <input id="mID"/></label><br/>
         <label>Title: <input id="mTitle"/></label><br/>
         <label>Release Date: <input id="mReleaseDate" type="date"/></label><br/>
         <label>Director: <select id="mDirector">

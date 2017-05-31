@@ -20,10 +20,21 @@ class Movie {
             // first, assign default values
             this.movieId = 0; // [1], PositiveInteger {id}
             this.title = "n.a."; // [1], NonEmptyString
+            this.releaseDate = "1990-06-27";
+            this.director = new Person("1");
+            this.actors = {};
         } else {
             // if arguments were passed, set properties accordingly
             this.movieId = slots.movieId;
             this.title = slots._title ? slots._title : slots.title;
+            this.releaseDate = slots.releaseDate;
+            this.director = slots._director ? slots._director : slots.director;
+            this.actors = {};
+
+            // [1..*] map, always contains capital
+            if (slots.actors || slots._actors) {
+                this.actors = slots._actors ? slots._actors : slots.actors;
+            }
         }
     }
 
@@ -90,6 +101,20 @@ class Movie {
 
         movieSlots.movieId = movieRec.movieId;
         movieSlots.title = movieRec._title ? movieRec._title : movieRec.title;
+        movieSlots.releaseDate = movieRec.releaseDate;
+
+        // replace director actor reference with object
+        movieSlots.director = Person.instances[movieRec.directorRef];
+
+        // convert the actors map from references to objects
+        if (movieRec.actorRefs) {
+            let tempActors = {};
+            for (let i = 0; i < movieRec.actorRefs.length; i += 1) {
+                tempActors[movieRec.actorRefs[i]] =
+                    Person.instances[movieRec.actorRefs[i]];
+            }
+            movieSlots.actors = tempActors;
+        }
 
         return movieSlots;
     }
@@ -177,7 +202,22 @@ class Movie {
      */
     convertObjToRec() {
         let movieRow = util.cloneObject( this ), keys, i;
-        console.log( "test" );
+
+        movieRow.directorRef = this._director.personId;
+
+        if (this._actors) {
+            movieRow.actorRefs = [];
+            keys = Object.keys( this._actors );
+
+            for (i = 0; i < keys.length; i += 1) {
+                movieRow.actorRefs.push( keys[i] );
+            }
+        }
+
+        delete movieRow.director;
+        delete movieRow._director;
+        delete movieRow.actors;
+        delete movieRow._actors;
 
         return movieRow;
     }
@@ -189,7 +229,13 @@ class Movie {
         // errors don't need to be caught here, they are handled in the add method
         let temp = {
             movieId: 1,
-            _title: "Germany"
+            _title: "Germany",
+            releaseDate: "1990-02-12",
+            director: Person.instances[1],
+            actors: {
+                "1": Person.instances["1"],
+                "2": Person.instances["2"]
+            }
         };
         Movie.add( temp );
 
@@ -272,6 +318,89 @@ class Movie {
 
     get title() {
         return this._title;
+    }
+
+
+    static checkDirector( myDirector ) {
+        let i, keys, values,
+            constraintViolation = new NoConstraintViolation( myDirector );
+
+        // mandatory
+        if (!myDirector) {
+            console.log( myDirector );
+            constraintViolation = new MandatoryValueConstraintViolation(
+                "A movie always needs to have a director. ", myDirector );
+        } else {
+        }
+        return constraintViolation;
+    }
+    
+    set director( newDirector ) {
+        const validationResult = Movie.checkDirector( newDirector );
+
+        // only valid values should enter the database
+        if (validationResult instanceof NoConstraintViolation) {
+            this._director = newDirector;
+        } else {
+            console.log( this );
+            alert( validationResult.message );
+            throw validationResult;
+        }
+    }
+
+    get director() {
+        return this._director;
+    }
+
+    set actors( newActors ) {
+        const validationResult = Movie.checkActors( newActors );
+        // only valid values should enter the database
+        if (validationResult instanceof NoConstraintViolation) {
+            this._actors = newActors;
+
+        } else {
+            alert( validationResult.message );
+            throw validationResult;
+        }
+    }
+
+    get actors() {
+        return this._actors;
+    }
+
+    /**
+     * adds a actor to this movie's actors map
+     * @param actor - can be id (name) oder object
+     */
+    addActor( actor ) {
+        let actorName;
+        if (actor instanceof Object) {
+            actorName = actor.name;
+        } else {
+            actorName = actor;
+        }
+        this.actors[actorName] = Person.instances[actorName];
+    }
+
+    /**
+     *
+     * @param {Object} myActors - map of actors
+     * @returns {*}
+     */
+    static checkActors( myActors ) {
+        let i, keysActors;
+        let constraintViolation = new NoConstraintViolation( myActors );
+        if (myActors) {
+
+            // known actors only
+            //keysActors = Object.keys( myActors );
+
+            //for (i = 0; i < keysActors; i += 1) {
+            //    constraintViolation =
+            //        Person.checkPersonIdAsRefId( keysActors[i] );
+            //}
+        }
+        return constraintViolation;
     }
 
 }

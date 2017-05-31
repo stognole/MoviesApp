@@ -6,15 +6,23 @@ pl.v.addMovie = {
      * necessary tasks for preparing the UI
      */
     setupUserInterface: function () {
-        const inputForm = document.forms["movieInput"];
+        const inputForm = document.forms["movieInput"],
+            selectDirector = inputForm["mDirector"],
+            selectActors = inputForm["mActors"];
 
-        Movie.retrieveAllData();
+        pl.c.app.retrieveAllData();
 
         // check field on input
         inputForm["mTitle"].addEventListener( "input", function () {
             inputForm["mTitle"].setCustomValidity(
                 Movie.checkTitle( inputForm["mTitle"].value ).message );
         } );
+
+        util.fillSelectWithOptions( Person.instances, selectDirector,
+            "personId", "name" );
+
+        util.fillSelectWithOptions( Person.instances, selectActors,
+            "personId", "name" );
 
         inputForm["saveBtn"].addEventListener( "click", function () {
             pl.v.addMovie.handleSaveBtnClickEvent();
@@ -37,8 +45,16 @@ pl.v.addMovie = {
 
         const slots = {
             movieId: inputForm["mID"].value,
-            title: inputForm["mTitle"].value
+            title: inputForm["mTitle"].value,
+            releaseDate: inputForm["mReleaseDate"].value,
+            director: Person.instances[inputForm["mDirector"].value]
         };
+
+        let myActors = {};
+        for (let el of (inputForm["mActors"].selectedOptions)) {
+            myActors[el.value] = Person.instances[el.value];
+        }
+        slots.actors =  myActors;
 
         inputForm["mTitle"].setCustomValidity(
             Movie.checkTitle( slots.title ).message );

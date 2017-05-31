@@ -5,12 +5,20 @@
 pl.v.updateMovie = {
     setupUserInterface: function () {
         const formObj = document.forms["movieUpdate"],
-            selMovie = document.getElementById( "selTitle" );
+            selMovie = document.getElementById( "selTitle" ),
+            selectDirector = formObj["mDirector"],
+            selectActors = formObj["mActors"];
 
         pl.c.app.retrieveAllData();
 
         util.fillSelectWithOptions( Movie.instances, selMovie,
             "movieId", "title" );
+
+        util.fillSelectWithOptions( Person.instances, selectDirector,
+            "personId", "name" );
+
+        util.fillSelectWithOptions( Person.instances, selectActors,
+            "personId", "name" );
 
 
         // check fields on input
@@ -51,8 +59,12 @@ pl.v.updateMovie = {
         if (movie) {
             document.getElementById( "mID" ).value = movie.movieId;
             document.getElementById( "mTitle" ).value = movie.title;
+            document.getElementById( "mReleaseDate" ).value = movie.releaseDate;
+            console.log(movie.director.personId);
+            document.getElementById( "mDirector" ).value
+                = movie.director.personId;
 
-            ["mTitle"].forEach(
+            ["mID", "mTitle", "mReleaseDate", "mDirector"].forEach(
                 function ( p ) {
                     // delete custom validation error message which may have
                     // been set before

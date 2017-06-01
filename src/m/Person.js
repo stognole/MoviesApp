@@ -131,6 +131,12 @@ class Person {
         let personName = this.name;
         let personId = this.personId;
 
+        if (Actor.instances[personId]) {
+            delete Actor.instances[personId];
+        }
+        if (Director.instances[personId]) {
+            delete Director.instances[personId];
+        }
         delete Person.instances[personId];
 
         console.log( "Person " + personName + " deleted." );

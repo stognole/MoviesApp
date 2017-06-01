@@ -18,10 +18,10 @@ pl.v.addMovie = {
                 Movie.checkTitle( inputForm["mTitle"].value ).message );
         } );
 
-        util.fillSelectWithOptions( Person.instances, selectDirector,
+        util.fillSelectWithOptions( Director.instances, selectDirector,
             "personId", "name" );
 
-        util.fillSelectWithOptions( Person.instances, selectActors,
+        util.fillSelectWithOptions( Actor.instances, selectActors,
             "personId", "name" );
 
         inputForm["saveBtn"].addEventListener( "click", function () {

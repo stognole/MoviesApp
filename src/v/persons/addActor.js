@@ -44,11 +44,14 @@ pl.v.addActor = {
         const slots = {
             personId: inputForm["pID"].value,
             name: inputForm["pName"].value,
-            agent: inputForm["aAgent"].value
+            agent: Person.instances[inputForm["aAgent"].value]
         };
 
         inputForm["pName"].setCustomValidity(
             Actor.checkName( slots.name ).message );
+
+        inputForm["aAgent"].setCustomValidity(
+            Actor.checkAgent( slots.agent ).message );
 
         if (inputForm.checkValidity()) {
             Actor.add( slots );

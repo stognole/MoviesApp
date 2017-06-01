@@ -10,21 +10,23 @@ pl.c.app = {
   },
 
   saveAllData: function () {
-    Person.saveAllData();
     Actor.saveAllData();
     Director.saveAllData();
+    Person.saveAllData();
     Movie.saveAllData();
   },
 
   retrieveAllData: function () {
-    Person.retrieveAllData();
     Actor.retrieveAllData();
     Director.retrieveAllData();
+    Person.retrieveAllData();
     Movie.retrieveAllData();
   },
 
   clearData: function () {
     try {
+      Actor.clearAllData();
+      Director.clearAllData();
       Person.clearAllData();
       Movie.clearAllData();
     } catch (e) {

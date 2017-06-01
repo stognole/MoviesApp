@@ -284,7 +284,7 @@ class Person {
 Person.instances = {};
 
 /** ############################################################################
- * Class Agent #################################################################
+ * Class Actor #################################################################
  ############################################################################ */
 
 class Actor extends Person {
@@ -293,10 +293,10 @@ class Actor extends Person {
         super(slots);
 
         if (arguments.length === 0) {
-            this.agent = new Person("1");
+            this._agent = new Person("1");
         } else {
             // if arguments were passed, set properties accordingly
-            this.agent = slots._agent ? slots._agent : slots.agent;
+            this._agent = slots._agent ? slots._agent : slots.agent;
         }
     }
 
@@ -327,7 +327,6 @@ class Actor extends Person {
      * back to objects
      */
     static retrieveAllData() {
-        super.retrieveAllData();
         console.log( "Actor data retrieval entered." );
 
         let allActorsString = "{}", allActors, keys, i, slots;
@@ -351,13 +350,12 @@ class Actor extends Person {
         } else {
             console.log( "No actors in storage." );
         }
+        super.retrieveAllData();
     }
     /**
      * writes all data from Actor.instances to the LocalStorage
      */
     static saveAllData() {
-        super.saveAllData();
-
         let allActorsString, error = false, allActors = {}, keys, i;
 
         keys = Object.keys( Actor.instances );
@@ -383,6 +381,59 @@ class Actor extends Person {
         } else {
             console.log( "Data saved: " + localStorage.getItem( "actors" ) );
         }
+
+        super.saveAllData();
+    }
+
+    static clearAllData() {
+        let i, keys;
+        if (confirm( "Do you want to clear all actor data?" )) {
+            keys = Object.keys( Actor.instances );
+            for (i = 0; i < keys.length; i += 1) {
+                // use destroy method to properly handle all references
+                Actor.instances[keys[i]].destroy();
+            }
+
+            // hard reset instances
+            Actor.instances = {};
+            localStorage.setItem( "actors", "{}" );
+            console.log( "Database cleared." );
+        }
+    }
+
+    /**
+     * replaces the references in a person record with referenced objects
+     * @param actorRec
+     * @returns {Object}
+     */
+    static convertRecToSlots( actorRec ) {
+        let actorSlots = {};
+
+        actorSlots.personId = actorRec.personId;
+        actorSlots.name = actorRec._name ? actorRec._name : actorRec.name;
+
+        actorSlots.agent = Person.instances[actorRec.agentRef];
+
+        return actorSlots;
+    }
+
+    /**
+     * replaces all the objects in a person object with reference values and
+     * returns the resulting object
+     *
+     * @returns {Object}
+     */
+    convertObjToRec() {
+        let actorRow = util.cloneObject( this ), keys, i;
+
+        if (this._agent) {
+            actorRow.agentRef = this._agent.personId;
+
+            delete actorRow.agent;
+            delete actorRow._agent;
+        }
+
+        return actorRow;
     }
 
     static checkAgent( myAgent ) {
@@ -391,9 +442,8 @@ class Actor extends Person {
 
         // mandatory
         if (!myAgent) {
-            console.log( myAgent );
-            //constraintViolation = new MandatoryValueConstraintViolation(
-            //   "An actor always needs to have a agent. ", myAgent );
+            constraintViolation = new MandatoryValueConstraintViolation(
+               "An actor always needs to have a agent. ", myAgent );
         } else {
         }
         return constraintViolation;
@@ -460,7 +510,6 @@ class Director extends Person {
      * back to objects
      */
     static retrieveAllData() {
-        super.retrieveAllData();
         console.log( "Director data retrieval entered." );
 
         let allDirectorsString = "{}", allDirectors, keys, i, slots;
@@ -484,14 +533,13 @@ class Director extends Person {
         } else {
             console.log( "No directors in storage." );
         }
+        super.retrieveAllData();
     }
 
     /**
      * writes all data from Director.instances to the LocalStorage
      */
     static saveAllData() {
-        super.saveAllData();
-
         let allDirectorsString, error = false, allDirectors = {}, keys, i;
 
         keys = Object.keys( Director.instances );
@@ -516,6 +564,24 @@ class Director extends Person {
             console.log( "Error when saving director data!" );
         } else {
             console.log( "Data saved: " + localStorage.getItem( "directors" ) );
+        }
+
+        super.saveAllData();
+    }
+
+    static clearAllData() {
+        let i, keys;
+        if (confirm( "Do you want to clear all director data?" )) {
+            keys = Object.keys( Director.instances );
+            for (i = 0; i < keys.length; i += 1) {
+                // use destroy method to properly handle all references
+                Director.instances[keys[i]].destroy();
+            }
+
+            // hard reset instances
+            Director.instances = {};
+            localStorage.setItem( "directors", "{}" );
+            console.log( "Database cleared." );
         }
     }
 

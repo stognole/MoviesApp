@@ -276,3 +276,243 @@ class Person {
 }
 
 Person.instances = {};
+
+/** ############################################################################
+ * Class Agent #################################################################
+ ############################################################################ */
+
+class Actor extends Person {
+
+    constructor(slots) {
+        super(slots);
+
+        if (arguments.length === 0) {
+            this.agent = new Person("1");
+        } else {
+            // if arguments were passed, set properties accordingly
+            this.agent = slots._agent ? slots._agent : slots.agent;
+        }
+    }
+
+    /**
+     * creates an new actor object and adds it to the instances collection
+     * @param slots
+     */
+    static add( slots ) {
+        super.add(slots);
+        let actor;
+        try {
+            actor = new Actor( slots );
+        } catch (e) {
+            console.log( e.constructor.name + ": " + e.message );
+            actor = null;
+        }
+
+        if (actor) {
+            Actor.instances[actor.personId] = actor;
+            console.log( "The actor " + actor.name + " has been added." );
+        } else {
+            console.log( "Error when adding actor." );
+        }
+    }
+
+    /**
+     * retrieves all the actors saved in the LocalStorage and converts them
+     * back to objects
+     */
+    static retrieveAllData() {
+        super.retrieveAllData();
+        console.log( "Actor data retrieval entered." );
+
+        let allActorsString = "{}", allActors, keys, i, slots;
+        try {
+            allActorsString = localStorage.getItem( "actors" );
+        } catch (e) {
+            console.log( "Error when retrieving actor data from " +
+                "LocalStorage:\n" + e );
+        }
+
+        allActors = JSON.parse( allActorsString );
+        if (allActors) {
+            keys = Object.keys( allActors );
+
+            // creates new actor objects according to the data and adds them to
+            // the instances collection
+            for (i = 0; i < keys.length; i += 1) {
+                slots = Actor.convertRecToSlots( allActors[keys[i]] );
+                Actor.add( slots );
+            }
+        } else {
+            console.log( "No actors in storage." );
+        }
+    }
+    /**
+     * writes all data from Actor.instances to the LocalStorage
+     */
+    static saveAllData() {
+        super.saveAllData();
+
+        let allActorsString, error = false, allActors = {}, keys, i;
+
+        keys = Object.keys( Actor.instances );
+
+        for (i = 0; i < keys.length; i += 1) {
+
+            allActors[keys[i]] = Actor.instances[keys[i]].convertObjToRec();
+        }
+
+
+        try {
+            allActorsString = JSON.stringify( allActors );
+            localStorage.setItem( "actors", allActorsString );
+        }
+        catch
+            (e) {
+            alert( "Actor data could not be saved!\n" + e );
+            error = true;
+        }
+
+        if (error) {
+            console.log( "Error when saving actor data!" );
+        } else {
+            console.log( "Data saved: " + localStorage.getItem( "actors" ) );
+        }
+    }
+
+    static checkAgent( myAgent ) {
+        let i, keys, values,
+            constraintViolation = new NoConstraintViolation( myAgent );
+
+        // mandatory
+        if (!myAgent) {
+            console.log( myAgent );
+            //constraintViolation = new MandatoryValueConstraintViolation(
+            //   "An actor always needs to have a agent. ", myAgent );
+        } else {
+        }
+        return constraintViolation;
+    }
+
+    set agent( newAgent ) {
+        const validationResult = Actor.checkAgent( newAgent );
+
+        // only valid values should enter the database
+        if (validationResult instanceof NoConstraintViolation) {
+            this._agent = newAgent;
+        } else {
+            console.log( this );
+            alert( validationResult.message );
+            throw validationResult;
+        }
+    }
+
+    get agent() {
+        return this._agent;
+    }
+
+}
+
+Actor.instances = {};
+
+
+
+
+/** ############################################################################
+ * Class Director ##############################################################
+ ############################################################################ */
+
+class Director extends Person {
+
+    constructor(slots) {
+        super(slots);
+    }
+
+    /**
+     * creates an new director object and adds it to the instances collection
+     * @param slots
+     */
+    static add( slots ) {
+        super.add(slots);
+        let director;
+        try {
+            director = new Director( slots );
+        } catch (e) {
+            console.log( e.constructor.name + ": " + e.message );
+            director = null;
+        }
+
+        if (director) {
+            Director.instances[director.personId] = director;
+            console.log( "The director " + director.name + " has been added." );
+        } else {
+            console.log( "Error when adding director." );
+        }
+    }
+
+    /**
+     * retrieves all the directors saved in the LocalStorage and converts them
+     * back to objects
+     */
+    static retrieveAllData() {
+        super.retrieveAllData();
+        console.log( "Director data retrieval entered." );
+
+        let allDirectorsString = "{}", allDirectors, keys, i, slots;
+        try {
+            allDirectorsString = localStorage.getItem( "directors" );
+        } catch (e) {
+            console.log( "Error when retrieving director data from " +
+                "LocalStorage:\n" + e );
+        }
+
+        allDirectors = JSON.parse( allDirectorsString );
+        if (allDirectors) {
+            keys = Object.keys( allDirectors );
+
+            // creates new director objects according to the data and adds them to
+            // the instances collection
+            for (i = 0; i < keys.length; i += 1) {
+                slots = Director.convertRecToSlots( allDirectors[keys[i]] );
+                Director.add( slots );
+            }
+        } else {
+            console.log( "No directors in storage." );
+        }
+    }
+
+    /**
+     * writes all data from Director.instances to the LocalStorage
+     */
+    static saveAllData() {
+        super.saveAllData();
+
+        let allDirectorsString, error = false, allDirectors = {}, keys, i;
+
+        keys = Object.keys( Director.instances );
+
+        for (i = 0; i < keys.length; i += 1) {
+
+            allDirectors[keys[i]] = Director.instances[keys[i]].convertObjToRec();
+        }
+
+
+        try {
+            allDirectorsString = JSON.stringify( allDirectors );
+            localStorage.setItem( "directors", allDirectorsString );
+        }
+        catch
+            (e) {
+            alert( "Director data could not be saved!\n" + e );
+            error = true;
+        }
+
+        if (error) {
+            console.log( "Error when saving director data!" );
+        } else {
+            console.log( "Data saved: " + localStorage.getItem( "directors" ) );
+        }
+    }
+
+}
+
+Director.instances = {};

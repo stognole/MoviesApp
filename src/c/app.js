@@ -11,11 +11,15 @@ pl.c.app = {
 
   saveAllData: function () {
     Person.saveAllData();
+    Actor.saveAllData();
+    Director.saveAllData();
     Movie.saveAllData();
   },
 
   retrieveAllData: function () {
     Person.retrieveAllData();
+    Actor.retrieveAllData();
+    Director.retrieveAllData();
     Movie.retrieveAllData();
   },
 
